@@ -9,7 +9,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Checkout the source code from your repository
-                git 'https://your-repo-url.git'
+                git 'https://github.com/Omar01501/Unit_Test.git'
             }
         }
 
