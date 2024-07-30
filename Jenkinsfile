@@ -2,27 +2,27 @@ pipeline {
     agent any
 
     tools {
-        nodejs "NodeJS" // Use the NodeJS installation named "NodeJS" in Jenkins
+        nodejs "NodeJS" 
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the source code from your repository
+               
                 git url: 'https://github.com/Omar01501/Unit_Test.git' ,branch: 'main'
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                // Install npm dependencies
+                
                 sh 'npm install'
             }
         }
 
         stage('Run Unit Tests') {
             steps {
-                // Run unit tests
+               
                 sh 'npm test'
             }
         }
@@ -30,7 +30,7 @@ pipeline {
 
     post {
         always {
-            // Archive test results
+            
             junit '**/test-results.xml'
         }
         success {
