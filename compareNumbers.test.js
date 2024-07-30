@@ -1,4 +1,4 @@
-// compareNumbers.test.js
+
 const compareNumbers = require('./compareNumbers');
 
 describe('compareNumbers', () => {
