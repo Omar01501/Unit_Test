@@ -13,7 +13,7 @@ function compareNumbers(num1, operator, num2) {
 }
 
 // Example usage
-const result = compareNumbers(3, '=', 5);
+const result = compareNumbers(3, '<', 5);
 
 console.log(result); // Output: false
 
