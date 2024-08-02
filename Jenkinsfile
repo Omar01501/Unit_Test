@@ -6,7 +6,7 @@ pipeline {
         registryCredential = 'docker-hub-credentials'
         dockerImage = ''
         containerName = 'my_app_container'
-        port = '8081' 
+        port = '8081' // Change this to the port your app uses
     }
 
     stages {
@@ -19,9 +19,29 @@ pipeline {
             }
         }
 
-       
+        stage('Verify Checkout') {
+            steps {
+                script {
+                    echo 'Listing files in the workspace...'
+                    sh 'ls -la'
+                }
+            }
+        }
 
-        
+        stage('Install Node Modules') {
+            steps {
+                script {
+                    echo 'Checking for package.json...'
+                    if (fileExists('package.json')) {
+                        echo 'package.json found. Installing npm packages...'
+                        sh 'npm install'
+                    } else {
+                        echo 'package.json not found in the workspace.'
+                        error('package.json does not exist. Cannot proceed with npm install.')
+                    }
+                }
+            }
+        }
 
         stage('Run Comparison Script') {
             steps {
@@ -35,12 +55,15 @@ pipeline {
                         error("Pipeline stopped due to comparison failure.")
                     } else {
                         echo "comparison.js returned true. Continuing the pipeline."
+                    }
+                }
+            }
+        }
 
-                        // Conditional execution for the following stages
-                        currentBuild.result = 'SUCCESS'
-                         stage('Docker Operations') {
+        stage('Docker Operations') {
             when {
                 expression {
+                    // This condition checks if the previous stage was successful
                     return currentBuild.result == 'SUCCESS'
                 }
             }
@@ -91,7 +114,7 @@ pipeline {
                     }
                 }
 
-                stage('Cleaning up') {
+                stage('Cleaning Up') {
                     steps {
                         script {
                             sh """
@@ -104,13 +127,6 @@ pipeline {
             }
         }
     }
-                    }
-                }
-            }
-        }
-
-        // Add a conditional block for the Docker-related stages
-       
 
     post {
         always {
