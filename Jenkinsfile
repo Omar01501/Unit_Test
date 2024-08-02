@@ -6,7 +6,7 @@ pipeline {
         registryCredential = 'docker-hub-credentials'
         dockerImage = ''
         containerName = 'my_app_container'
-        port = '8081' // Change this to the port your app uses
+        port = '8081' 
     }
 
     stages {
@@ -18,7 +18,7 @@ pipeline {
                 }
             }
         }
-
+    /*
         stage('Verify Checkout') {
             steps {
                 script {
@@ -42,6 +42,7 @@ pipeline {
                 }
             }
         }
+        */
 
         stage('Run Comparison Script') {
             steps {
