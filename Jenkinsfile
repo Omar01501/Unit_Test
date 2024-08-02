@@ -1,43 +1,53 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs "NodeJS" 
-    }
-
+    
     stages {
         stage('Checkout') {
             steps {
-               
-                git url: 'https://github.com/Omar01501/Unit_Test.git' ,branch: 'main'
-            }
-        }
-
-        stage('Install Dependencies') {
-            steps {
                 
-                sh 'npm install'
+                git 'https://github.com/Omar01501/Unit_Test.git'
             }
         }
 
-        stage('Run Unit Tests') {
+        pipeline {
+    agent any
+
+    stages {
+        stage('Install Node Modules') {
             steps {
-               
-                sh 'npm test'
+                script {
+                    // Install any necessary npm packages
+                    sh 'npm install'
+                }
+            }
+        }
+
+        stage('Run Comparison Script') {
+            steps {
+                script {
+                    // Run the comparison.js script
+                    def exitCode = sh(script: 'node comparison.js', returnStatus: true)
+                    
+                    // Check if the script returned a failure exit code
+                    if (exitCode != 0) {
+                        echo "comparison.js returned false. Stopping the pipeline."
+                        error("Pipeline stopped due to comparison failure.")
+                    } else {
+                        echo "comparison.js returned true. Continuing the pipeline."
+                    }
+                }
+            }
+        }
+
+        stage('Subsequent Steps') {
+            steps {
+                echo 'Running subsequent stages...'
+                // Add more stages or steps here as needed
             }
         }
     }
+}
 
-    post {
-        always {
-            
-            junit '**/test-results.xml'
-        }
-        success {
-            echo 'All tests passed successfully!'
-        }
-        failure {
-            echo 'Some tests failed. Please check the logs.'
-        }
-    }
+}
 }
