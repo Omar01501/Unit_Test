@@ -14,8 +14,4 @@ function compareNumbers(num1, operator, num2) {
 
 // Example usage:
 console.log(compareNumbers(3, '=', 5));  // Output: false
-console.log(compareNumbers(3, '==', '3'));  // Output: true (compares values only)
-console.log(compareNumbers(10, '>', 5));  // Output: true
-console.log(compareNumbers(3, '<', 7));  // Output: true
-console.log(compareNumbers(5, '==', 5));  // Output: true
-console.log(compareNumbers(5, '==', '5'));  // Output: true (loose equality allows type coercion)
+
