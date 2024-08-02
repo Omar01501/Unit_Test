@@ -53,6 +53,7 @@ pipeline {
                     if (exitCode != 0) {
                         echo "comparison.js returned false. Stopping the pipeline."
                         error("Pipeline stopped due to comparison failure.")
+                        currentBuild.result = 'False'
                     } else {
                         currentBuild.result = 'SUCCESS'
                         echo "comparison.js returned true. Continuing the pipeline."
