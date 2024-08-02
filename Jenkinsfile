@@ -60,9 +60,9 @@ pipeline {
                         echo "comparison.js returned true. Continuing the pipeline."
                     }
                 }
-            }
+            }*/
         }
-    */
+    
 
         stage('Docker Operations') {
             when {
