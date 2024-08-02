@@ -48,17 +48,17 @@ pipeline {
                 script {
                     echo 'Running comparison.js script...'
                     def exitCode = sh(script: 'node comparison.js', returnStatus: true)
-                    currentBuild.result = 'SUCCESS'
+                   
                     // Check if the script returned a failure exit code
                     if (exitCode != 0) {
                         echo "comparison.js returned false. Stopping the pipeline."
                         error("Pipeline stopped due to comparison failure.")
                         currentBuild.result = 'False'
                         
-                    } /*else {
+                    } else {
                         currentBuild.result = 'SUCCESS'
                         echo "comparison.js returned true. Continuing the pipeline."
-                    }*/
+                    }
                 }
             }
         }
