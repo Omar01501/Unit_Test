@@ -1,19 +1,13 @@
 pipeline {
     agent any
 
-    
     stages {
         stage('Checkout') {
             steps {
-                
                 git 'https://github.com/Omar01501/Unit_Test.git'
             }
         }
 
-        pipeline {
-    agent any
-
-    stages {
         stage('Install Node Modules') {
             steps {
                 script {
@@ -47,7 +41,4 @@ pipeline {
             }
         }
     }
-}
-
-}
 }
