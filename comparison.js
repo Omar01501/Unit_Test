@@ -12,6 +12,14 @@ function compareNumbers(num1, operator, num2) {
     }
 }
 
-// Example usage:
-console.log(compareNumbers(3, '>', 5));  // Output: false
+// Example usage
+const result = compareNumbers(3, '=', 5);
 
+console.log(result); // Output: false
+
+// Exit the process with the correct exit code
+if (result) {
+    process.exit(0); // Success
+} else {
+    process.exit(1); // Failure
+}
