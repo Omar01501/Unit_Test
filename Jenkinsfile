@@ -43,7 +43,7 @@ pipeline {
             }
         }
 
-      /*  stage('Run Comparison Script') {
+        stage('Run Comparison Script') {
             steps {
                 script {
                     echo 'Running comparison.js script...'
@@ -54,37 +54,15 @@ pipeline {
                         echo "comparison.js returned false. Stopping the pipeline."
                         error("Pipeline stopped due to comparison failure.")
                         currentBuild.result = 'False'
+                        /*
                     } else {
                         currentBuild.result = 'SUCCESS'
                         echo "comparison.js returned true. Continuing the pipeline."
                     }
                 }
             }
-        }*/
-        stage('Run Comparison Script') {
-    steps {
-        script {
-            echo 'Running comparison.js script...'
-            
-            // Execute the comparison.js script and capture the exit code
-            def exitCode = sh(script: 'node comparison.js', returnStatus: true)
-            
-            // Check if the script returned a failure exit code
-            if (exitCode != 0) {
-                echo "comparison.js returned false. Stopping the pipeline."
-                error("Pipeline stopped due to comparison failure.")
-                currentBuild.result = 'FAILURE' // Set result to FAILURE explicitly
-            }
-            
-            // Check if the script returned a success exit code
-            if (exitCode == 0) {
-                echo "comparison.js returned true. Continuing the pipeline."
-                currentBuild.result = 'SUCCESS' // Set result to SUCCESS explicitly
-            }
         }
-    }
-}
-
+    */
 
         stage('Docker Operations') {
             when {
