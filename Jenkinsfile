@@ -59,8 +59,8 @@ pipeline {
                         currentBuild.result = 'SUCCESS'
                         echo "comparison.js returned true. Continuing the pipeline."
                     }
-                }
-            }*/
+                }*/
+            }
         }
     
 
