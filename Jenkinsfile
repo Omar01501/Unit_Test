@@ -6,7 +6,7 @@ pipeline {
         registryCredential = 'docker-hub-credentials'
         dockerImage = ''
         containerName = 'my_app_container'
-        port = '8081' // Change this to the port your app uses
+        port = '8081' 
     }
 
     stages {
@@ -19,29 +19,9 @@ pipeline {
             }
         }
 
-        stage('Verify Checkout') {
-            steps {
-                script {
-                    echo 'Listing files in the workspace...'
-                    sh 'ls -la'
-                }
-            }
-        }
+       
 
-        stage('Install Node Modules') {
-            steps {
-                script {
-                    echo 'Checking for package.json...'
-                    if (fileExists('package.json')) {
-                        echo 'package.json found. Installing npm packages...'
-                        sh 'npm install'
-                    } else {
-                        echo 'package.json not found in the workspace.'
-                        error('package.json does not exist. Cannot proceed with npm install.')
-                    }
-                }
-            }
-        }
+        
 
         stage('Run Comparison Script') {
             steps {
@@ -58,13 +38,7 @@ pipeline {
 
                         // Conditional execution for the following stages
                         currentBuild.result = 'SUCCESS'
-                    }
-                }
-            }
-        }
-
-        // Add a conditional block for the Docker-related stages
-        stage('Docker Operations') {
+                         stage('Docker Operations') {
             when {
                 expression {
                     return currentBuild.result == 'SUCCESS'
@@ -130,6 +104,13 @@ pipeline {
             }
         }
     }
+                    }
+                }
+            }
+        }
+
+        // Add a conditional block for the Docker-related stages
+       
 
     post {
         always {
