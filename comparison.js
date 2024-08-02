@@ -13,4 +13,4 @@ function compareNumbers(num1, operator, num2) {
 }
 
 // Example usage:
-console.log(compareNumbers(3, '>', 5));  // Output: false
+console.log(compareNumbers(3, '=', 5));  // Output: false
