@@ -53,17 +53,21 @@ pipeline {
                     }
                 }
 
-                stage('Building and Pushing Docker Image with Docker Compose') {
-                    steps {
-                        script {
-                            sh """
-                            # Build and push Docker image using Docker Compose
-                            docker-compose -f docker-compose.yml build
-                            docker-compose -f docker-compose.yml push
-                            """
-                        }
+               stage('Building and Pushing Docker Image with Docker Compose') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: registryCredential, passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                        sh """
+                        # Log in to Docker Hub
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                        
+                        # Build and push Docker image using Docker Compose
+                        docker-compose -f docker-compose.yml build
+                        docker-compose -f docker-compose.yml push
+                        """
                     }
                 }
+            }
 
                 stage('Deploy the App on Current VM using Docker Compose') {
                     steps {
