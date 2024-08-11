@@ -1,9 +1,12 @@
 version: '3'
 services:
-  web:
-    build: .
-    image: your-username/your-image-name
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: omarbh1501/stage_repo:${BUILD_NUMBER}
     ports:
-      - "80:80"
+      - "8081:8081"
     environment:
-      - ENV_VAR_NAME=value
+      
+      - NODE_ENV=production
