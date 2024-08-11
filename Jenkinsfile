@@ -6,7 +6,7 @@ pipeline {
         registryCredential = 'docker-hub-credentials'
         dockerImage = ''
         containerName = 'my_app_container'
-        port = '8081' 
+        port = '8081'
     }
 
     stages {
@@ -18,31 +18,6 @@ pipeline {
                 }
             }
         }
-    /*
-        stage('Verify Checkout') {
-            steps {
-                script {
-                    echo 'Listing files in the workspace...'
-                    sh 'ls -la'
-                }
-            }
-        }
-
-        stage('Install Node Modules') {
-            steps {
-                script {
-                    echo 'Checking for package.json...'
-                    if (fileExists('package.json')) {
-                        echo 'package.json found. Installing npm packages...'
-                        sh 'npm install'
-                    } else {
-                        echo 'package.json not found in the workspace.'
-                        error('package.json does not exist. Cannot proceed with npm install.')
-                    }
-                }
-            }
-        }
-        */
 
         stage('Run Comparison Script') {
             steps {
@@ -50,7 +25,6 @@ pipeline {
                     echo 'Running comparison.js script...'
                     def exitCode = sh(script: 'node comparison.js', returnStatus: true)
                    
-                    // Check if the script returned a failure exit code
                     if (exitCode != 0) {
                         echo "comparison.js returned false. Stopping the pipeline."
                         error("Pipeline stopped due to comparison failure.")
@@ -63,12 +37,10 @@ pipeline {
                 }
             }
         }
-    
 
         stage('Docker Operations') {
             when {
                 expression {
-                    // This condition checks if the previous stage was successful
                     return currentBuild.result == 'SUCCESS'
                 }
             }
@@ -81,39 +53,27 @@ pipeline {
                     }
                 }
 
-                stage('Building Docker Image') {
-                    steps {
-                        script {
-                            dockerImage = docker.build("${registry}:${BUILD_NUMBER}")
-                        }
-                    }
-                }
-
-                stage('Push Docker Image to Docker Hub') {
-                    steps {
-                        script {
-                            docker.withRegistry('', registryCredential) {
-                                dockerImage.push()
-                            }
-                        }
-                    }
-                }
-
-                stage('Deploy the App on Current VM') {
+                stage('Building and Pushing Docker Image with Docker Compose') {
                     steps {
                         script {
                             sh """
-                            # Stop and remove any existing container with the same name
-                            if [ \$(docker ps -a -q -f name=${containerName}) ]; then
-                                docker stop ${containerName}
-                                docker rm ${containerName}
-                            fi
+                            # Build and push Docker image using Docker Compose
+                            docker-compose -f docker-compose.yml build
+                            docker-compose -f docker-compose.yml push
+                            """
+                        }
+                    }
+                }
 
-                            # Pull the Docker image from Docker Hub
-                            docker pull ${registry}:${BUILD_NUMBER}
+                stage('Deploy the App on Current VM using Docker Compose') {
+                    steps {
+                        script {
+                            sh """
+                            # Stop and remove any existing container
+                            docker-compose -f docker-compose.yml down
 
-                            # Run the Docker container
-                            docker run -d --name ${containerName} -p ${port}:${port} ${registry}:${BUILD_NUMBER}
+                            # Deploy the application
+                            docker-compose -f docker-compose.yml up -d
                             """
                         }
                     }
@@ -123,8 +83,8 @@ pipeline {
                     steps {
                         script {
                             sh """
-                            # Force remove the Docker image
-                            docker rmi -f ${registry}:${BUILD_NUMBER}
+                            # Remove any dangling images
+                            docker image prune -f
                             """
                         }
                     }
