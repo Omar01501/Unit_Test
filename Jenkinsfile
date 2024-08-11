@@ -68,6 +68,7 @@ pipeline {
                     }
                 }
             }
+               }
 
                 stage('Deploy the App on Current VM using Docker Compose') {
                     steps {
